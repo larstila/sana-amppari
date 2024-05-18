@@ -3,32 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finnish Spelling Bee Game</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Sana-amppari</title>
 </head>
 <body>
-    <div class="game-container">
-        <h1>Finnish Spelling Bee Game</h1>
-        <div class="hive">
-            <span id="center-letter" class="letter"></span>
-            <div class="outer-letters">
-                <span class="letter"></span>
-                <span class="letter"></span>
-                <span class="letter"></span>
-                <span class="letter"></span>
-                <span class="letter"></span>
-                <span class="letter"></span>
-            </div>
+    <h1>Sana-amppari</h1>
+    <div id="game-container">
+        <div id="hive">
+            <span id="center-letter"></span>
+            <div id="outer-letters"></div>
         </div>
+        <div id="banner" class="success"></div>
         <input type="text" id="word-input" placeholder="Enter a word">
-        <button id="submit-word">Submit</button>
+        <button onclick="checkWord()">Submit</button>
         <p id="message"></p>
-        <div class="words-found">
-            <h2>Words Found:</h2>
+        <div id="words-found">
+            <h2>Löydetyt sanat:</h2>
             <ul id="found-words"></ul>
         </div>
-        <p id="score">Score: 0</p>
+        <p id="score">Pisteet: <span id="score-value">0</span></p>
     </div>
-    <script src="script.js"></script>
+
+    <script src="game.js"></script>
 </body>
 </html>

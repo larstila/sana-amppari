@@ -59,3 +59,31 @@ body {
     font-size: 20px;
     font-weight: bold;
 }
+
+#banner {
+    background-color: #f8d7da; /* Red color for error messages */
+    color: #721c24; /* Dark text color */
+    padding: 10px; /* Padding around the text */
+    margin-bottom: 20px; /* Spacing below the banner */
+    border: 1px solid #f5c6cb; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+}
+
+#banner.success {
+    background-color: #d4edda; /* Green color for success messages */
+    color: #155724; /* Dark text color */
+    border-color: #c3e6cb; /* Border color */
+}
+
+#banner.warning {
+    background-color: #fff3cd; /* Yellow color for warning messages */
+    color: #856404; /* Dark text color */
+    border-color: #ffeeba; /* Border color */
+}
+
+#banner.info {
+    background-color: #cce5ff; /* Blue color for info messages */
+    color: #004085; /* Dark text color */
+    border-color: #b8daff; /* Border color */
+}
+
