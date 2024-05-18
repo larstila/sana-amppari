@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finnish Spelling Bee Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Finnish Spelling Bee Game</h1>
+        <div class="hive">
+            <span id="center-letter" class="letter"></span>
+            <div class="outer-letters">
+                <span class="letter"></span>
+                <span class="letter"></span>
+                <span class="letter"></span>
+                <span class="letter"></span>
+                <span class="letter"></span>
+                <span class="letter"></span>
+            </div>
+        </div>
+        <input type="text" id="word-input" placeholder="Enter a word">
+        <button id="submit-word">Submit</button>
+        <p id="message"></p>
+        <div class="words-found">
+            <h2>Words Found:</h2>
+            <ul id="found-words"></ul>
+        </div>
+        <p id="score">Score: 0</p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
