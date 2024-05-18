@@ -1,0 +1,61 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+.game-container {
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.hive {
+    display: inline-block;
+    margin: 20px 0;
+}
+
+.letter {
+    display: inline-block;
+    margin: 5px;
+    padding: 15px;
+    border: 2px solid #333;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 18px;
+    background: #eee;
+}
+
+#center-letter {
+    background: #ffa500;
+}
+
+#word-input {
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+#submit-word {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.words-found {
+    text-align: left;
+    margin-top: 20px;
+}
+
+#score {
+    font-size: 20px;
+    font-weight: bold;
+}
