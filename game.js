@@ -76,7 +76,7 @@ document.getElementById('word-input').addEventListener('submit', function(event)
 
     // Optionally, update the list of found words
     // For example:
-    // updateFoundWordsList(userInput, scoreChange);
+    // updateFoundWordsList(userInput, scohreChange);
 });
 
 // Function to update the list of answered words in the UI
