@@ -1,7 +1,50 @@
-// Define global variables
-let centerLetter, outerLetters, possibleWords, foundWords = [];
-let score = 0;
+// todo
+/**
+ * if initialize new game OR button new-game is pressed
+ *  initialize new game
+ * else continue old game
+ * 
+ * 
+ * 
+ *new game function:
+ *  fetch dictionary wordlist and pangram wordlist
+ *  create hive()
+ *create hive():
+ *  take word from pangram
+ *  chose one to be centerLetter
+ *  rest letters to be outrLetters
+ *  update these to frontend
+ *user submit a word: 
+ *  check if guessed 
+ *  check if not valid
+ *      give error message to frontend
+ *      ask for new guess
+ *  calculate points
+ *  update points on frontend
+ * 
+ * 
+ * 
+ * 
+ * 
+*/
 
+
+// Define global variables
+    let centerLetter, outerLetters, possibleWords, answeredWords = [];
+    let score = 0;
+
+
+
+function newGame() {
+    const newGame = document.getElementById('new-game');
+    // Clear the existing list
+    // Add each answered word to the list
+    answeredWords.forEach(word => {
+        const listItem = document.createElement('li');
+        listItem.textContent = word;
+        answeredWordsListElement.appendChild(listItem);
+    });
+}
 
 // Function to check if a word is valid
 function isValidWord(word, centerLetter, outerLetters) {
@@ -32,13 +75,15 @@ function calculateScore(word, centerLetter, outerLetters) {
 
 // Function to update the UI with the current game state
 // Event listener for submitting a word
-const btn = document.querySelector("button");
-let wordInput = document.getElementById('word-input');
-console.log(wordInput)
-wordInput.addEventListener('submit', function(event) {
-    console.log("event happened")
-    event.preventDefault();
-    const userInput = document.getElementById('user-input').value.trim().toLowerCase();
+
+let wordInput = document.getElementById("word-input");
+
+wordInput.addEventListener("submit", (e) => {
+    console.log(wordInput.value)
+    e.preventDefault();
+
+    let userInput = document.getElementById('user-input').value
+    userInput = userInput.trim().toLowerCase();
 
     let bannerMessage = '';
     let bannerClass = ''    
@@ -109,6 +154,11 @@ fetch('wordlist/kaikkisanat.txt')
         console.error(`Error fetching word list: ${error}`);
     
     });
+fetch('wordlists/pangrams.txt')
+    .then(response = response.text)
+    .then(wordList => {
+
+    })
 
 
     // Function to import the word list from a file
@@ -128,8 +178,12 @@ function importDict(filePath) {
     }
 }
 
+
+
+
 // Function to generate the hive of letters and possible words
 function generateHive(wordList) {
+    random = Math.random()
     const letters = [...new Set(wordList.join(''))];
     while (true) {
         random.shuffle(letters);
@@ -150,26 +204,3 @@ function checkHive(possibleWords) {
     if (pangram.length === 0) return false;
     return true;
 }
-
-
-let loginForm = document.getElementById("loginForm");
-
-loginForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  let username = document.getElementById("username");
-  let password = document.getElementById("password");
-
-  if (username.value == "" || password.value == "") {
-    alert("Ensure you input a value in both fields!");
-  } else {
-    // perform operation with form input
-    alert("This form has been successfully submitted!");
-    console.log(
-      `This form has a username of ${username.value} and password of ${password.value}`
-    );
-
-    username.value = "";
-    password.value = "";
-  }
-});

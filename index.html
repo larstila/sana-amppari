@@ -9,24 +9,14 @@
 <body>
     <div><h1>Sana-amppari</h1></div>
 
-    <form action="" id="loginForm">
-        <h1>Login</h1>
-        <input type="text" id="username" class="form-control" placeholder="Enter your Username...">
-        <input type="password" id="password" class="form-control" placeholder="Enter your Password...">
-        <button type="submit">Submit</button>
-    </form>
-      
-
-
     <div id="game-container">
-        
         <div id="hive">
             <span id="center-letter"></span>
             <div id="outer-letters"></div>
         </div>
         
         <div id="banner" class="info"></div>
-        <form action="" id="word-input"></form>
+        <form action="" id="word-input">
             <input type="text" id="user-input" placeholder="Enter a word">
             <button type="submit">Submit</button>
         </form>
@@ -37,6 +27,9 @@
             <ul id="found-words"></ul>
         </div>
         <p id="score">Pisteet: <span id="score-value">0</span></p>
+    </div>
+    <div>
+        <button id="new-game">New Game</button>
     </div>
     <script src="game.js"></script>
 </body>
