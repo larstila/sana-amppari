@@ -38,7 +38,7 @@ console.log(wordInput)
 wordInput.addEventListener('submit', function(event) {
     console.log("event happened")
     event.preventDefault();
-    const userInput = document.getElementById('word').value.trim().toLowerCase();
+    const userInput = document.getElementById('user-input').value.trim().toLowerCase();
 
     let bannerMessage = '';
     let bannerClass = ''    
