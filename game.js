@@ -32,7 +32,10 @@ function calculateScore(word, centerLetter, outerLetters) {
 
 // Function to update the UI with the current game state
 // Event listener for submitting a word
-document.getElementById('word-input').addEventListener('submit', function(event) {
+const btn = document.querySelector("button");
+let wordInput = document.getElementById('word-input');
+console.log(wordInput)
+wordInput.addEventListener('submit', function(event) {
     console.log("event happened")
     event.preventDefault();
     const userInput = document.getElementById('word').value.trim().toLowerCase();
