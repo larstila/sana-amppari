@@ -70,7 +70,7 @@ def check_hive(center_letter, outer_letters, possible_words):
 
 
 # Example usage
-file_path = 'kaikkisanat.txt'
+file_path = '../wordlists/kaikkisanat.txt'
 #file_path = "short.txt"
 word_list = import_dict(file_path)
 

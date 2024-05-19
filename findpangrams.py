@@ -1,7 +1,7 @@
-# Create pangram form desired wordlist
+# Create pangram form desired wordlists
 # CHANGE THESE TO YOUR OWN:
-original_file_path = 'wordlist/kaikkisanat.txt'
-pangram_file_path = 'wordlist/pangrams.txt'
+original_file_path = 'wordlists/kaikkisanat.txt'
+pangram_file_path = 'wordlists/pangrams.txt'
 
 import re
 

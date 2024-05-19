@@ -1,71 +1,137 @@
-// todo
-/**
- * if initialize new game OR button new-game is pressed
- *  initialize new game
- * else continue old game
- * 
- * 
- * 
- *new game function:
- *  fetch dictionary wordlist and pangram wordlist
- *  create hive()
- *create hive():
- *  take word from pangram
- *  chose one to be centerLetter
- *  rest letters to be outrLetters
- *  update these to frontend
- *user submit a word: 
- *  check if guessed 
- *  check if not valid
- *      give error message to frontend
- *      ask for new guess
- *  calculate points
- *  update points on frontend
- * 
- * 
- * 
- * 
- * 
-*/
 
 
-// Define global variables
-    let centerLetter, outerLetters, possibleWords, answeredWords = [];
-    let score = 0;
+// Function to set a cookie
+function setCookie(name, value, days) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
 
+// Function to get a cookie value by name
+function getCookie(name) {
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookies = decodedCookie.split(';');
+    for (let cookie of cookies) {
+        const pair = cookie.split('=');
+        const cookieName = pair[0].trim();
+        if (cookieName === name) {
+            return pair[1];
+        }
+    }
+    return null;
+}
 
+// Function to initialize a variable from a cookie or set a default value
+function initOrGetFromCookie(name, defaultValue, days) {
+    let cookieValue = getCookie(name);
+    if (cookieValue === null) {
+        setCookie(name, defaultValue, days);
+        cookieValue = defaultValue;
+    }
+    return cookieValue;
+}
 
+// Check if cookies exist and fetch values
+let centerLetter = initOrGetFromCookie("centerLetter",'',999);
+let outerLetters = initOrGetFromCookie("outerLetters",'',999);
+let possibleWords = initOrGetFromCookie("possibleWords", '', 999);
+let answeredWords = initOrGetFromCookie("answeredWords", null, 999);
+let score = initOrGetFromCookie("score", '0', 999);
+
+answeredWords = answeredWords ? answeredWords.split(',') : [];
+score = score ? parseInt(score) : 0;
+
+// Function to start a new game
 function newGame() {
-    const newGame = document.getElementById('new-game');
-    // Clear the existing list
-    // Add each answered word to the list
+    console.log("new game")
+    fetch('./wordlists/kaikkisanat.txt')
+        .then(response => response.text())
+        .then(wordList => {
+            wordList = wordList.split('\n').map(word => word.trim()).filter(word => /^[adehijklmnoprstuvyöä]+$/.test(word) && word.length >= 4);
+            return wordList;
+        })
+        .then(wordList => {
+            fetch('./wordlists/pangrams.txt')
+                .then(response => response.text())
+                .then(pangramList => {
+                    pangramList = pangramList.split('\n').map(word => word.trim());
+                    const [newCenterLetter, newOuterLetters, newPossibleWords] = generateHive(wordList, pangramList);
+                    centerLetter = newCenterLetter;
+                    outerLetters = newOuterLetters;
+                    possibleWords = newPossibleWords;
+                    answeredWords = [];
+                    score = 0;
+
+                    setCookie("centerLetter", centerLetter, 7);
+                    setCookie("outerLetters", outerLetters.join(''), 7);
+                    setCookie("possibleWords", possibleWords.join(','), 7);
+                    setCookie("answeredWords", answeredWords.join(','), 7);
+                    setCookie("score", score, 7);
+
+                    updateUI();
+                });
+        });
+}
+
+// Function to generate a hive
+function generateHive(wordList, pangramList) {
+    const randomPangram = pangramList[Math.floor(Math.random() * pangramList.length)];
+    const letters = new Set(randomPangram);
+    const centerLetter = [...letters][Math.floor(Math.random() * letters.size)];
+    const outerLetters = [...letters].filter(letter => letter !== centerLetter);
+    const possibleWords = wordList.filter(word => {
+        const wordLetters = new Set(word);
+        return wordLetters.has(centerLetter) && [...wordLetters].every(letter => letters.has(letter));
+    });
+    return [centerLetter, outerLetters, possibleWords];
+}
+
+// Function to update the UI
+function updateUI() {
+    document.getElementById("center-letter").textContent = centerLetter;
+    document.getElementById("outer-letters").textContent = outerLetters.join(' ');
+    document.getElementById("score-value").textContent = score;
+    const foundWordsElement = document.getElementById("found-words");
+    foundWordsElement.innerHTML = '';
     answeredWords.forEach(word => {
-        const listItem = document.createElement('li');
-        listItem.textContent = word;
-        answeredWordsListElement.appendChild(listItem);
+        const li = document.createElement('li');
+        li.textContent = word;
+        foundWordsElement.appendChild(li);
     });
 }
 
-// Function to check if a word is valid
-function isValidWord(word, centerLetter, outerLetters) {
-    if (word.length < 4) return false;
-    if (!word.includes(centerLetter)) return false;
-    for (const letter of word) {
-        if (!outerLetters.includes(letter) && letter !== centerLetter) {
-            return false;
-        }
+// Function to handle word submission
+function handleWordSubmit(event) {
+    event.preventDefault();
+    const userInput = document.getElementById('user-input').value.trim().toLowerCase();
+    document.getElementById('user-input').value = '';
+
+    if (answeredWords.includes(userInput)) {
+        showMessage("Sana on jo löydetty!");
+        return;
     }
-    return true;
+
+    if (!possibleWords.includes(userInput)) {
+        showMessage("Arvaus ei ole sanalistalla.");
+        return;
+    }
+
+    answeredWords.push(userInput);
+    score += calculateScore(userInput);
+
+    setCookie("answeredWords", answeredWords.join(','), 7);
+    setCookie("score", score, 7);
+
+    updateUI();
+    showMessage("Löysit sanan!");
 }
 
-// Function to calculate the score of a word
-function calculateScore(word, centerLetter, outerLetters) {
-    if (!isValidWord(word, centerLetter, outerLetters)) return 0;
+// Function to calculate score
+function calculateScore(word) {
     let score = word.length;
     if (word.length === 4) {
         score = 1;
-    } else {
-        score = word.length;
     }
     if (new Set(word) === new Set([...outerLetters, centerLetter])) {
         score += 7;
@@ -73,134 +139,22 @@ function calculateScore(word, centerLetter, outerLetters) {
     return score;
 }
 
-// Function to update the UI with the current game state
-// Event listener for submitting a word
-
-let wordInput = document.getElementById("word-input");
-
-wordInput.addEventListener("submit", (e) => {
-    console.log(wordInput.value)
-    e.preventDefault();
-
-    let userInput = document.getElementById('user-input').value
-    userInput = userInput.trim().toLowerCase();
-
-    let bannerMessage = '';
-    let bannerClass = ''    
-    let scoreChange = 0;
-
-    // Check if the user input is a valid word
-    if (!isValidWord(userInput, centerLetter, outerLetters)) {
-        bannerMessage = 'Invalid guess';
-        bannerClass = 'error'
-    } else if (!possibleWords.includes(userInput)) {
-        bannerMessage = 'Word not in wordlist';
-        bannerClass = 'error'
-    } else {
-        // Calculate the score if the word is valid and in the word list
-        scoreChange = calculateScore(userInput, centerLetter, outerLetters);
-        score += scoreChange;
-        answeredWords.push(userInput);
-        bannerClass = 'success'
-    }
-
-    // Update the page banner with the appropriate message and class
-    const bannerElement = document.getElementById('banner');
-    bannerElement.textContent = bannerMessage;
-            // Add the answered word to the list
-    
-
-            // Update the list of answered words
-    updateAnsweredWordsList();
-    
-    // Update the score display
-    document.getElementById('score').textContent = `Score: ${score}`;
-
-    // Clear the input field
-    document.getElementById('word').value = '';
-
-    // Optionally, update other UI elements based on the game state
-    // For example:
-    // updateUI();
-
-    // Optionally, update the list of found words
-    // For example:
-    // updateFoundWordsList(userInput, scohreChange);
-});
-
-// Function to update the list of answered words in the UI
-function updateAnsweredWordsList() {
-    const answeredWordsListElement = document.getElementById('found-words');
-    // Clear the existing list
-    answeredWordsListElement.innerHTML = '';
-    // Add each answered word to the list
-    answeredWords.forEach(word => {
-        const listItem = document.createElement('li');
-        listItem.textContent = word;
-        answeredWordsListElement.appendChild(listItem);
-    });
+// Function to show a message
+function showMessage(message) {
+    const messageElement = document.getElementById('message');
+    messageElement.textContent = message;
+    setTimeout(() => messageElement.textContent = '', 3000);
 }
+
+// Event listener for word submission
+document.getElementById('word-input').addEventListener('submit', handleWordSubmit);
+
+// Event listener for new game button
+document.getElementById('new-game').addEventListener('click', newGame);
 
 // Initialize the game
-fetch('wordlist/kaikkisanat.txt')
-    .then(response => response.text())
-    .then(wordList => {
-        wordList = wordList.split('\n').map(word => word.trim().toLowerCase())
-                             .filter(word => /^[adehijklmnoprstuvyöä]+$/.test(word) && word.length >= 4);
-        [centerLetter, outerLetters, possibleWords] = generateHive(wordList);
-        updateUI();
-    })
-    .catch(error => {
-        console.error(`Error fetching word list: ${error}`);
-    
-    });
-fetch('wordlists/pangrams.txt')
-    .then(response = response.text)
-    .then(wordList => {
-
-    })
-
-
-    // Function to import the word list from a file
-function importDict(filePath) {
-    // Your code for importing the word list
-    try {
-        const data = fs.readFileSync("wordlist/kaikkisanat.txt", 'utf-8');
-        const lines = data.split('\n');
-
-        // filter lines to remove words with special characters and rare finnish letters (bcfgwxz)
-        const filteredLines = lines.map(line => line.trim().toLowerCase())
-                                    .filter(line => /^[adehijklmnoprstuvyöä]+$/.test(line) && line.length >= 4);
-        return filteredLines;
-    } catch (error) {
-        console.error(`Error: ${error.message}`);
-        return [];
-    }
-}
-
-
-
-
-// Function to generate the hive of letters and possible words
-function generateHive(wordList) {
-    random = Math.random()
-    const letters = [...new Set(wordList.join(''))];
-    while (true) {
-        random.shuffle(letters);
-        const centerLetter = letters.pop();
-        const outerLetters = random.sample(letters, 6);
-        const possibleWords = wordList.filter(word => isValidWord(word, centerLetter, outerLetters));
-        if (checkHive(possibleWords)) {
-            return [centerLetter, outerLetters, possibleWords];
-        }
-    }
-}
-
-// TODO: make some fancier filtering to better Hives, for example etu- ja takavokaali separation.
-
-function checkHive(possibleWords) {
-    if (possibleWords.length < 10 ) return false;
-    const pangram = possibleWords.filter(word => new Set(word) === new Set([...outerLetters, centerLetter]));
-    if (pangram.length === 0) return false;
-    return true;
+if (!centerLetter || !outerLetters || !possibleWords) {
+    newGame();
+} else {
+    updateUI();
 }
