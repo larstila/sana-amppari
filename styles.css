@@ -37,6 +37,9 @@ body {
 #center-letter {
     background: #ffa500;
 }
+#outer-letters {
+    background: #ffa500;
+}
 
 #word-input {
     padding: 10px;

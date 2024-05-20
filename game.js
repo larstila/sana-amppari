@@ -1,4 +1,5 @@
-
+const wordlistname = './wordlists/filtered.txt'
+const pangramlistname = './wordlists/pangrams.txt'
 
 // Function to set a cookie
 function setCookie(name, value, days) {
@@ -34,7 +35,7 @@ function initOrGetFromCookie(name, defaultValue, days) {
 
 // Check if cookies exist and fetch values
 let centerLetter = initOrGetFromCookie("centerLetter",'',999);
-let outerLetters = initOrGetFromCookie("outerLetters",'',999);
+let outerLetters = initOrGetFromCookie("outerLetters",[],999);
 let possibleWords = initOrGetFromCookie("possibleWords", '', 999);
 let answeredWords = initOrGetFromCookie("answeredWords", null, 999);
 let score = initOrGetFromCookie("score", '0', 999);
@@ -45,14 +46,14 @@ score = score ? parseInt(score) : 0;
 // Function to start a new game
 function newGame() {
     console.log("new game")
-    fetch('./wordlists/kaikkisanat.txt')
+    fetch(wordlistname)
         .then(response => response.text())
         .then(wordList => {
             wordList = wordList.split('\n').map(word => word.trim()).filter(word => /^[adehijklmnoprstuvyöä]+$/.test(word) && word.length >= 4);
             return wordList;
         })
         .then(wordList => {
-            fetch('./wordlists/pangrams.txt')
+            fetch(pangramlistname)
                 .then(response => response.text())
                 .then(pangramList => {
                     pangramList = pangramList.split('\n').map(word => word.trim());
